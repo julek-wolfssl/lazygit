@@ -85,6 +85,9 @@ type GuiConfig struct {
 	// If true, capture mouse events.
 	// When mouse events are captured, it's a little harder to select text: e.g. requiring you to hold the option key when on macOS.
 	MouseEvents bool `yaml:"mouseEvents"`
+	// If true, clicking a diff in the main view doesn't focus it, so selecting lines to stage or patch has to be started with a key (e.g. `enter` on a file, or `0`).
+	// Once the diff is focused, clicks in it select lines as usual. Mouse scrolling, alt- or shift-clicking a line to open it in your editor, and clicking the main view when it shows something other than a diff are unaffected.
+	DisableClickToStageLines bool `yaml:"disableClickToStageLines"`
 	// If true, do not show a warning when amending a commit.
 	SkipAmendWarning bool `yaml:"skipAmendWarning"`
 	// If true, do not show a warning when discarding changes from a focused diff.
@@ -885,6 +888,7 @@ func GetDefaultConfigForPlatform(platform string) *UserConfig {
 			ScrollOffBehavior:         "margin",
 			TabWidth:                  4,
 			MouseEvents:               true,
+			DisableClickToStageLines:  false,
 			SkipAmendWarning:          false,
 			SkipDiscardChangeWarning:  false,
 			SkipStashWarning:          false,

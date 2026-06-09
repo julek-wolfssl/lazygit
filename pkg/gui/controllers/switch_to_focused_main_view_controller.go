@@ -63,11 +63,25 @@ func (self *SwitchToFocusedMainViewController) Context() types.Context {
 }
 
 func (self *SwitchToFocusedMainViewController) onClickMain(opts gocui.ViewMouseBindingOpts) error {
+	if self.clickToFocusDisabled() {
+		return nil
+	}
 	return self.focusMainView(self.c.Contexts().Normal, opts.Y)
 }
 
 func (self *SwitchToFocusedMainViewController) onClickSecondary(opts gocui.ViewMouseBindingOpts) error {
+	if self.clickToFocusDisabled() {
+		return nil
+	}
 	return self.focusMainView(self.c.Contexts().NormalSecondary, opts.Y)
+}
+
+// clickToFocusDisabled reports whether a click on the main view must leave the focus
+// where it is. Focusing a diff selects lines in it to stage or patch, which the user can
+// opt into doing by keyboard only.
+func (self *SwitchToFocusedMainViewController) clickToFocusDisabled() bool {
+	_, isDiff := self.context.(types.DiffMainViewContext)
+	return isDiff && self.c.UserConfig().Gui.DisableClickToStageLines
 }
 
 func (self *SwitchToFocusedMainViewController) handleFocusMainView() error {
